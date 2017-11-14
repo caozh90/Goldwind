@@ -1,0 +1,68 @@
+"接口逻辑：
+接收MES传递数据并且调用BAPI进行报工
+1.调用BAPI_PRODORDCONF_CREATE_TT进行工序确认操作。同时调用GOODSMOVEMENTS，当发料类型= 1计划内在提交前需要根据接口传递的数据，按照工单+顺序+工序号+物料号在RESB中（XLOEK=“”KZEAR=“”XWAOK=“X”）匹配数量（BDMNG-ENMNG）及预留号RSNUM、行项目RSPOS，如果预留中不存在该物料则提示 “工单中XX顺序 XX工序没有XXXX物料 ，请修改工单”，如果如果数量（BDMNG-ENMNG）<=0,则反馈消息“物料扣账失败，该订单没有可扣除数量” ，否则提交数据 .当发料类型= 1计划外,直接调用GOODSMOVEMENT 进行发料不参照预留
+具体 BAPI参数
+POST_WRONG_ENTRIES=“0”
+ORDERID =“工单号”
+SEQUENCE=“工序顺序”
+OPERATION=“工序编号”
+POSTG_DATE=“过账日期”
+FIN_CONF =“确认类型”
+CLEAR_RES=“”，是否需要待确认清除预留
+YIELD=“工序确认数量”
+*SCRAP=“工序报废数量”取消
+*REWORK=“工序返工数量”
+CONF_QUAN_UNIT=“数量单位”
+CONF_ACTI_UNIT1=“标准值单位1”
+CONF_ACTIVITY1=“标准值1”
+CONF_ACTI_UNIT1=“标准值单位2”
+CONF_ACTIVITY1=“标准值2”
+CONF_ACTI_UNIT1=“标准值单位3”
+CONF_ACTIVITY1=“标准值3”
+CONF_ACTI_UNIT1=“标准值单位4”
+CONF_ACTIVITY1=“标准值4”
+CONF_ACTI_UNIT1=“标准值单位5”
+CONF_ACTIVITY1=“标准值5”
+CONF_ACTI_UNIT1=“标准值单位6”
+CONF_ACTIVITY1=“标准值6”"															
+"EXEC_START_DATE=“工序开始日期”
+EXEC_START_TIME=“工序开始时间”
+EXEC_FIN_DATE=“工序完工日期”
+EXEC_FIN_TIME=“工序完工时间”
+
+1、当发料类型=“1”计划内(需要参照预留进行发料)
+以MES传递数据工单 顺序、工序号、物料在表RESB （AUFNR、PLNFL、VORNR、MATNR）中XLOEK=“”、KZEAR<>X XWAOK=X,取RSNUM 预留号、RSPOS预留行项目SOBKZ特殊库存，如果取出为空，则提示“物料X不能进行过账，可能已经完成过账或订单中不包含这个物料”
+BAPI_GOODSMVT_CREATE
+GM_Code= “03” 发料
+MATERIAL=物料
+PLANT=工厂
+STGE_LOC=库存地点
+BATCH=批号
+SPEC_STOCK=“特殊库存标识”
+SALES_ORD=“销售订单”
+S_ORD_ITEM=“销售订单行项目”
+WBS_ELEM=“WBS元素”
+MOVE_VAL_TYPE=“评估类型”
+ENTRY_QNT =“数量”
+ENTRY_UOM =“单位”
+BATCH=“批次”
+SERIALNO =“序列号”
+RESERV_NO =RSNUM
+RES_ITEM = RSPOS
+"2、当发料类型=“2”计划外不需要参照预留发料（超过计划量的发料）
+BAPI_GOODSMVT_CREATE
+GM_Code= “03” 发料
+MATERIAL=物料
+PLANT=工厂
+STGE_LOC=库存地点
+BATCH=批号
+SPEC_STOCK=“特殊库存标识”
+SALES_ORD=“销售订单”
+S_ORD_ITEM=“销售订单行项目”
+WBS_ELEM=“WBS元素”
+MOVE_VAL_TYPE=“评估类型”
+ENTRY_QNT =“数量”
+ENTRY_UOM =“单位”
+BATCH=“批次”
+SERIALNO =“序列号”
+"															
