@@ -1,0 +1,163 @@
+  DATA: lt_ekorg TYPE STANDARD TABLE OF ekorg.
+  DATA: lt_ekgrp TYPE STANDARD TABLE OF ekgrp.
+  DATA: lt_matnr TYPE STANDARD TABLE OF matnr.
+  DATA: lt_matkl TYPE  STANDARD TABLE OF matkl.
+  DATA: lt_saknr TYPE STANDARD TABLE OF saknr.
+  DATA: lt_kostl TYPE STANDARD TABLE OF kostl.
+  DATA: lt_werks TYPE STANDARD TABLE OF werks_d.
+  DATA: lt_lifnr TYPE STANDARD TABLE OF lifnr.
+  
+  *****
+DATA: BEGIN OF gs_t024e,
+        ekorg LIKE t024e-ekorg,
+        ekotx LIKE t024e-ekotx,
+      END OF gs_t024e.
+DATA: gt_t024e LIKE STANDARD TABLE OF gs_t024e.
+****
+DATA: BEGIN OF gs_t024,
+        ekgrp LIKE t024-ekgrp,
+        eknam LIKE t024-eknam,
+      END OF gs_t024.
+DATA: gt_t024 LIKE STANDARD TABLE OF gs_t024.
+****物料描述
+DATA: BEGIN OF gs_makt,
+        matnr LIKE makt-matnr,
+        spras LIKE makt-spras,
+        maktx LIKE makt-maktx,
+      END OF gs_makt.
+DATA: gt_makt LIKE STANDARD TABLE OF gs_makt.
+****物料组描述
+DATA: BEGIN OF gs_t023t,
+        matkl LIKE t023t-matkl,
+        wgbez LIKE t023t-wgbez,
+      END OF gs_t023t.
+DATA gt_t023t LIKE STANDARD TABLE OF gs_t023t.
+******科目描述
+DATA: BEGIN OF gs_skat,
+        saknr LIKE skat-saknr,
+        txt20 LIKE skat-txt20,
+      END OF gs_skat.
+DATA: gt_skat LIKE STANDARD TABLE OF gs_skat.
+DATA: BEGIN OF gs_cskt,
+        kostl LIKE cskt-kostl,
+        ltext LIKE cskt-ltext,
+      END OF gs_cskt.
+DATA: gt_cskt LIKE STANDARD TABLE OF gs_cskt.
+DATA: BEGIN OF gs_t001w,
+        werks LIKE t001w-werks,
+        name1 LIKE t001w-name1,
+      END OF gs_t001w.
+DATA: gt_t001w LIKE STANDARD TABLE OF gs_t001w.
+****
+DATA: BEGIN OF gs_lfa1,
+        lifnr LIKE lfa1-lifnr,
+        name1 LIKE lfa1-name1,
+      END OF gs_lfa1.
+DATA: gt_lfa1 LIKE STANDARD TABLE OF gs_lfa1.
+  
+
+****采购组织
+  IF lt_ekorg IS NOT INITIAL.
+    SELECT
+      ekorg
+      ekotx
+      INTO CORRESPONDING FIELDS OF TABLE gt_t024e
+      FROM t024e
+      FOR ALL ENTRIES IN lt_ekorg
+      WHERE ekorg = lt_ekorg-table_line.
+  ENDIF.
+****采购组描述
+  IF lt_ekgrp IS NOT INITIAL.
+    SELECT
+      ekgrp
+      eknam
+      INTO CORRESPONDING FIELDS OF TABLE gt_t024
+      FROM t024
+      FOR ALL ENTRIES IN lt_ekgrp
+      WHERE ekgrp = lt_ekgrp-table_line.
+  ENDIF.
+****物料描述
+  IF lt_matnr IS NOT INITIAL.
+    SELECT
+      matnr
+      maktx
+      INTO CORRESPONDING FIELDS OF TABLE gt_makt
+      FROM makt
+      FOR ALL ENTRIES IN lt_matnr
+      WHERE matnr = lt_matnr-table_line
+      AND spras = sy-langu.
+  ENDIF.
+****物料组
+  IF lt_matkl IS NOT INITIAL.
+    SELECT
+      matkl
+      wgbez
+      INTO CORRESPONDING FIELDS OF TABLE gt_t023t
+      FROM t023t
+      FOR ALL ENTRIES IN lt_matkl
+      WHERE
+      spras = sy-langu
+      AND matkl = lt_matkl-table_line.
+  ENDIF.
+****科目描述
+  IF lt_saknr IS NOT INITIAL.
+    SELECT
+      saknr
+      txt20
+      INTO CORRESPONDING FIELDS OF TABLE gt_skat
+      FROM skat
+      FOR ALL ENTRIES IN lt_saknr
+      WHERE spras = sy-langu
+      AND ktopl = 'GWCA'
+      AND saknr = lt_saknr-table_line.
+  ENDIF.
+****成本中心
+  IF lt_kostl IS NOT INITIAL .
+    SELECT
+      kostl
+      ltext
+      INTO CORRESPONDING FIELDS OF TABLE gt_cskt
+      FROM cskt
+      FOR ALL ENTRIES IN lt_kostl
+      WHERE spras = sy-langu
+      AND kostl = lt_kostl-table_line.
+  ENDIF.
+
+******工厂
+  IF lt_werks IS NOT INITIAL.
+    SELECT
+      werks
+      name1
+      INTO CORRESPONDING FIELDS OF TABLE gt_t001w
+      FROM t001w
+      FOR ALL ENTRIES IN lt_werks
+      WHERE werks = lt_werks-table_line.
+  ENDIF.
+
+  IF lt_lifnr IS NOT INITIAL.
+    SELECT
+      lifnr
+      name1
+      INTO CORRESPONDING FIELDS OF TABLE gt_lfa1
+      FROM lfa1
+      FOR ALL ENTRIES IN lt_lifnr
+      WHERE lifnr = lt_lifnr-table_line.
+  ENDIF.
+  
+  
+      DATA: lt_bukrs TYPE STANDARD TABLE OF bukrs.
+	  DATA: BEGIN OF gs_t001,
+        bukrs LIKE t001-bukrs,
+        butxt LIKE t001-butxt,
+      END OF gs_t001.
+DATA: gt_t001 LIKE STANDARD TABLE OF gs_t001.
+	公司代码
+    IF lt_bukrs IS NOT INITIAL.
+      SELECT
+        bukrs
+        butxt
+        INTO CORRESPONDING FIELDS OF TABLE gt_t001
+        FROM t001
+        FOR ALL ENTRIES IN lt_bukrs
+        WHERE bukrs = lt_bukrs-table_line.
+    ENDIF.

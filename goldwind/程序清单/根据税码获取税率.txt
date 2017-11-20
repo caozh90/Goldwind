@@ -1,0 +1,50 @@
+  IF lt_mwskz IS NOT INITIAL.
+    SELECT
+      aland
+      mwskz
+      kbetr
+      INTO CORRESPONDING FIELDS OF TABLE gt_t007v
+      FROM a003 AS a0
+      INNER JOIN konp AS kn ON a0~knumh = kn~knumh
+      FOR ALL ENTRIES IN lt_mwskz
+      WHERE a0~kappl = 'TX'
+       AND a0~aland = lt_mwskz-lands
+       AND a0~kschl IN ('MWAS','MWVS')
+       AND a0~mwskz = lt_mwskz-mwskz
+      AND kopos = 1.
+  ENDIF.
+    
+含税金额计算
+CLEAR: gs_konp.
+READ TABLE gt_konp INTO gs_konp WITH KEY aland = gs_ekko-lands mwskz = gs_ekko-mwskz.
+gs_total_sum-zbrtwr_input = gs_total_sum-zbrtwr_input + gs_ekko-netwr * ( 1 + gs_konp-kbetr / 1000  ).
+
+
+  DATA: BEGIN OF ls_mwskz,
+          aland LIKE a003-aland,
+          mwskz LIKE a003-mwskz,
+        END OF ls_mwskz.
+  DATA: lt_mwskz LIKE STANDARD TABLE OF ls_mwskz.
+    DATA: BEGIN OF ls_t007v,
+          aland LIKE a003-aland,
+          mwskz LIKE a003-mwskz,
+          kbetr LIKE konp-kbetr,
+        END OF ls_t007v.
+  DATA: lt_t007v LIKE STANDARD TABLE OF ls_t007v.
+    IF lt_mwskz IS NOT INITIAL.
+    SELECT
+      aland
+      mwskz
+      kbetr
+      INTO CORRESPONDING FIELDS OF TABLE lt_t007v
+      FROM a003 AS a0
+      INNER JOIN konp AS kn ON a0~knumh = kn~knumh
+      FOR ALL ENTRIES IN lt_mwskz
+      WHERE a0~kappl = 'TX'
+       AND a0~aland = lt_mwskz-aland
+       AND a0~kschl IN ('MWAS','MWVS')
+       AND a0~mwskz = lt_mwskz-mwskz
+      AND kopos = 1.
+  ENDIF.
+        READ TABLE lt_t007v INTO ls_t007v WITH KEY aland = lv_land1 mwskz = ls_bseg-mwskz.
+      ls_prctr-wrbtr = ls_prctr-wrbtr * ( 1 + ls_t007v-kbetr / 1000 ).

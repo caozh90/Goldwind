@@ -1,0 +1,22 @@
+AT SELECTION-SCREEN.
+  PERFORM  frm_authority_check.
+  
+  
+FORM frm_authority_check .
+  DATA: lt_bukrs TYPE STANDARD TABLE OF bukrs.
+  DATA: l_bukrs TYPE bukrs.
+
+  SELECT
+  vbukr
+  INTO TABLE lt_bukrs
+  FROM proj
+  WHERE pspid IN so_pspid.
+  LOOP AT  lt_bukrs INTO l_bukrs.
+    AUTHORITY-CHECK OBJECT 'Z_GW_PS001'
+                   ID 'BUKRS' FIELD l_bukrs
+                   ID 'ACTVT' DUMMY.
+    IF sy-subrc <> 0.
+      MESSAGE e001(zps01) WITH l_bukrs DISPLAY LIKE 'I'.
+    ENDIF.
+  ENDLOOP.
+ENDFORM.
