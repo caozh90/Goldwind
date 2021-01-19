@@ -1,0 +1,15 @@
+git clone速度太慢怎么办
+
+
+方法一：把Github的项目转移到码云去，然后再克隆到本地
+
+方法二：改hosts文件加一些配置
+
+方法三：挂代理，各种改配置
+
+
+最简单有效的方法：就是修改一下url链接，在github.com后面加上.cnpmjs.org即可
+
+比如原始命令是：git clone https://github.com/ultranity/Pix-EzViewer.git，修改后命令为：
+
+git clone https://github.com.cnpmjs.org/ultranity/Pix-EzViewer.git

@@ -1,0 +1,8 @@
+当SAP发生生产订单入库操作是调用接口将订单入库信息传递给MES，在物料货物移动过账时做增强，当移动类型BWART=101或者102 和KZBEW=4，时调用MES接口将数据传递到MES
+WMS入库或者SAP做入库时单据如何处理（1、库房输入入库信息2、系统内创建入库单，仓库根据入库单进行过账）
+MIGO相关的3个增强点：
+MB_MIGO_BADI
+MB_DOCUMENT_BADI
+MB_CHECK_LINE_BADI
+
+

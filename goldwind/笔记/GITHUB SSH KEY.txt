@@ -1,0 +1,6 @@
+GITHUB SSH KEY
+	C:\Users\caozh\.ssh
+	caozh.123
+
+
+https://github.com.cnpmjs.org/caozh90/Goldwind.git

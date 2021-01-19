@@ -1,0 +1,23 @@
+Linux 安装软件的几种方式
+	源码编译
+	压缩包解压(tar.gz)
+	编译好的安装包(PRM,DPKZ)
+	在线安装(YUM, APT)
+
+Linux yum命令详解
+	YUM软件包管理器，基于PRM包管理，能够从指定的服务器自动下载PRM包并安装，可以自动处理依赖关系，并且一次安装所有的依赖软件包。YUM提供了查找、删除、安装某一个、一组甚至全部软件包的命令。
+	yum使用：
+		命令模式：yum -选项命令包， -h帮助，-y安装中全部选中Yes，-q不显示安装过程
+
+wget
+	wget是下载文件的一个组件，只要URL正确可以下载任何东西。
+	wget url
+	wget -O name url
+	wget -limit -rate
+	wget -c
+	wget -b / tail -f wget-log
+	wget -user-agent
+	wget -spider
+
+RPM
+	软件包管理，一种软件包名称以.rpm结尾。安装语法:rpm -ivh。RPM安装文件的关联性太大，有时安装1个软件需要安装很多其他的软件包，并且只能安装下载到本地机器上的rpm包
